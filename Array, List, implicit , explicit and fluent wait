@@ -49,5 +49,24 @@ public static  void addItems(WebDriver driver,String[] itemsNeeded){
 	}
 }
 
+//Fluent Wait of web Element(in main method after clicking any element)
+
+Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(30))
+ 		.pollingEvery(Duration.ofSeconds(3)).ignoring(NoSuchElementException.class);
+
+WebElement foo = wait.until(new Function<WebDriver, WebElement>() {
+	
+	public WebElement apply(WebDriver driver) {
+		if(driver.findElement(By.xpath(" ")).isDisplayed()) {
+			return driver.findElement(By.xpath(" "));
+		}
+		else 
+			return null;
+		}
+});
+System.out.println(driver.findElement(By.xpath("")).getText());
+}
+
+
 }
 
