@@ -1,0 +1,49 @@
+package newproject;
+
+import java.util.Iterator;
+import java.util.Set;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+public class Scopes {
+	
+	public static void main(String[] args) throws Exception {
+		WebDriver driver = new ChromeDriver();
+		driver.get("");
+		
+		//print the no of links in full page
+		System.out.println(driver.findElements(By.tagName("a")).size());
+		
+		//print the links in footer section of same page
+		WebElement footerDriver = driver.findElement(By.xpath(""));
+		System.out.println(footerDriver.findElements(By.tagName("a")));
+		
+		//print the links in column of same footer section
+		WebElement columnDriver =driver.findElement(By.xpath(""));
+		System.out.println(columnDriver.findElements(By.tagName("a")));
+		
+		//clink all the links one by one(open in other window) in that section
+		for(int i=1;i<columnDriver.findElements(By.tagName("a")).size();i++)
+		{
+			String clickonlinkTab = Keys.chord(Keys.CONTROL,Keys.ENTER); //it will open the link in other tab(press control the enter)
+			
+			columnDriver.findElements(By.tagName("a")).get(i).sendKeys(clickonlinkTab);
+			Thread.sleep(5000L);			
+		}
+		
+		//fetch the title of every tab
+		Set<String> abc = driver.getWindowHandles();
+		Iterator<String> it = abc.iterator();
+		
+		while(it.hasNext())
+		{
+			driver.switchTo().window(it.next());
+		    System.out.println(driver.getTitle());
+		}
+
+}
+}
