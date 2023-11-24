@@ -1,0 +1,91 @@
+import java.io.File;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.io.FileUtils;
+import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.Proxy;
+import org.openqa.selenium.TakesScreenshot;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.testng.asserts.SoftAssert;
+
+public class ChromeOptionsAndPlugins {
+
+public static void main(String[] args) {
+
+		// To handle HTTP certificates (restricted browser) advance->proced to contine
+		
+		ChromeOptions options = new ChromeOptions();
+		options.setAcceptInsecureCerts(true);      //like this we can add for any browser
+		
+		System.setProperty("webdriver.chrome.driver", "/Users/rahulshetty/Documents/chromedriver");
+		WebDriver driver = new ChromeDriver(options);
+		driver.get("https://expired.badssl.com/");
+		
+		// to set proxy
+		
+		Proxy proxy = new Proxy();
+		proxy.setHttpProxy("ipaddress:4444");
+		options.setCapability("proxy", proxy);
+		
+		// we can handle plugins also 
+		Map<String, Object> prefs = new HashMap<String, Object>();
+		
+		prefs.put("download.default_directory", "/directory/path");
+		
+		options.setExperimentalOption("prefs", prefs);
+		
+		// to delete the browser cookies and maximize
+		driver.manage().window().maximize();
+		driver.manage().deleteAllCookies();
+		driver.manage().deleteCookieNamed("zsvjn");
+		
+		//To take screen shot
+		File src = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+		FileUtils.copyFile(src, new File("D:\\rahul\\shreenshot.png"));
+		
+		//To handle if any link/URL is broken or not (get 404 error)
+		/* If u have a so much link in a single tab and then need to check the status code validate every link
+		 * to check Inspect -> network -> Fetch/XHR -> get the status code( if it's greater than 400 means error)
+		 */
+		
+		//for single link
+		driver.get("");
+		String url = driver.findElement(By.cssSelector("a[href*='Brokenlink']")).getAttribute("href");
+		
+		HttpURLConnection conn = (HttpURLConnection)new URL(url).openConnection(); //open connection method will launch url and get the request
+		conn.setRequestMethod("HEAD");  //need to pass request method(POST, get)
+		conn.connect();
+		int responceCode = conn.getResponseCode();
+		System.out.println(responceCode);
+		
+		//for multiple link
+		List<WebElement> links = driver.findElements(By.cssSelector("li[class='gf-li'] a"));
+		SoftAssert a =new SoftAssert();
+		
+		for(WebElement link : links){
+			
+			String url1= link.getAttribute("href");
+			HttpURLConnection   conn1 = (HttpURLConnection)new URL(url1).openConnection();
+			conn.setRequestMethod("HEAD");
+			conn.connect();
+			int respCode = conn.getResponseCode();
+			System.out.println(respCode);
+
+			a.assertTrue(respCode<400, "The link with Text"+link.getText()+" is broken with code" +respCode);
+			
+		}
+		 a.assertAll(); //SOFT ASSERT will not fail the script until it end full scenario
+
+	}
+
+}
