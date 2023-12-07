@@ -1,0 +1,38 @@
+Types of locators we can use :- 
+* Class Name    ->  tagname.classname
+* ID            ->  tagname#id
+* CSS selector  ->  tagname[attribute='value']
+* XPath         ->  //tagname[@attribute='value']
+
+* links         -> By.linkText("Any text in anchor tag")
+* tagName       -> By.tagName("div")
+
+Short cuts =>
+1) *             //button[text()='any words']  star will consider for any tag
+                 //*[text()='log out']
+
+2) /..       ->  back to parent tag
+
+3) .         ->  text()  //*[@id='SpecialService' and contains(.,'anyText')]
+
+4) contains --> XPATH         = //div[contains(@class,'anyLetterInClass')]
+                CSS SELECTOR  = div[class*='anyLetter']
+
+5) index    --> XPATH         = //div[@name='Rahul'][2]
+                CSS SELECTOR  = div[class='point']:nth-child(index)  
+
+6) Parent to child --> XPATH         = //*[contains(@id,'CruiseDetail')]//div[contains(@class,'mProCruiseDisEmbark')]
+                       CSS SELECTOR  = div[id*='CruiseDetail'] div[class*='mProCruiseDisEmbark'] (only space reqired)
+
+7) Child to parent --> XPATH  = //header/div/button[1]/following-sibling::tagname(index)      (sibling means brother-sister)
+                                //header/div/../following-sibling::div(1)                     (/.. back to parent)
+                                //header/div/parent::tagname[index]                           (/parent::div[2] we can acess any parent locator)
+    
+    Absolute path locator --> coming from origina path ( /html/head/h2)
+    relative path locator --> direct to required path  ( //head/h2    )
+
+8) CSS advance locators --> tagname[id$='something']  (ID ends with something)
+                            tagname[id^='something']  (ID starts with something )
+                            tagname[id='something']>a  ( > notify that a is parent element)
+9) 
+   
