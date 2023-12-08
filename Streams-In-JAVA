@@ -1,0 +1,129 @@
+package newproject;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.testng.annotations.Test;
+
+import dev.failsafe.internal.util.Assert;
+
+public class Streams {
+	WebDriver driver = new ChromeDriver();
+	@Test
+	public void normalUse() {
+		//find the name starts with "A"
+		ArrayList<String> names = new ArrayList<String>();
+		names.add("Abhi");
+		names.add("Rahul");
+		names.add("Balu");
+		names.add("Alfia");
+		names.add("Sachin");
+		int count = 0;
+		for(int i = 0;i<names.size();i++) {
+			String actualname = names.get(i);
+			if(actualname.startsWith("A")) {
+				count++;
+			}
+		}
+		System.out.println(count);
+	}
+	
+	//Instead of this streams implemented 
+	/* If terminal operator is not there means no value for intermediate op
+	 * terminal will execute only when intermediate returns true.
+	 * we can create stream insted of creating array and converting
+	 */
+	@Test
+	public void streamFilter() {
+		List<String> name1 = Arrays.asList("Rahul","Abhi","Ammu","Manu"); // converted array into list
+		Long no = name1.stream().filter(s->s.startsWith("A")).count();  //filer is intermediate, count is terminator
+		System.out.println(no);
+		
+		//in {} also we can write and creating streams directly
+		Stream.of("Rahul","Abhi","Ammu","Manju").filter(s->
+		{
+			s.startsWith("A");
+			return true;
+		}).count();
+		
+		//print names having letter > 4 
+		name1.stream().filter(s->s.length()>4).forEach(s->System.out.println(s));
+		name1.stream().filter(s->s.length()>4).limit(1).forEach(s->System.out.println(s)); //to print only one result
+		
+	}
+	
+	@Test
+	public void streamMap(){
+		
+		//names end with l and make upper case
+		Stream.of("Rahul","Abhi","Ammu","Manju").filter(s->s.endsWith("l")).map(s->s.toUpperCase())
+		.forEach(s->System.out.println(s));
+		
+		//start with R and sort and lower case print
+		Stream.of("Rahul","Abhi","Ammu","Manju").filter(s->s.startsWith("R")).sorted().map(s->s.toLowerCase())
+		.forEach(s->System.out.println(s));
+		
+	}
+	
+	@Test
+	public void streamConcat(){
+		//concat(merge) to list and make one big list(stram)
+		List<String> firstList = Arrays.asList("Rahul","Abhi","Ammu","Manju");
+		Stream<String> secondList = Stream.of("Rahul2","Abhi2","Ammu2","Manju2");
+		
+		Stream<String> newList = Stream.concat(firstList.stream(), secondList);
+		
+		//if current name is present or not
+		boolean true1 =  secondList.anyMatch(s->s.equalsIgnoreCase("Rahul"));
+	}
+	
+	@Test
+	public void streamCollect(){
+		//Streams to list and store
+		List<String> ls = Stream.of("Rahul2","Abhi2","Ammu2","Manju2").filter(s->s.startsWith("A")).map(s->s.toUpperCase())
+				.collect(Collectors.toList());
+		System.out.println(ls.get(1));
+		
+		//distinct method is use to print the unique number in a list and delete all duplicates
+	}
+	
+	//second video - web tabling, compare with column, page changing.
+	
+	//get value from table and sort it and compare
+	List<WebElement> elementsList = driver.findElements(By.xpath("//tr/td[1]"));
+	//collect all values from table
+	List<String> originalList = elementsList.stream().map(s -> s.getText()).collect(Collectors.toList());
+	//sort it
+	List<String> sortedList = originalList.stream().sorted().collect(Collectors.toList());
+	Assert.assertTrue(originalList.equals(sortedList));
+	
+	//to create customized method for stream
+	List<WebElement> rows = driver.findElements(By.xpath("//tr/td[1]"));
+	List<String> price = rows.stream().filter(s -> s.getText().contains("Rice")).map(s -> getPriceVeggie(s)).collect(Collectors.toList());
+	
+	private String getPriceVeggie(WebElement s) {
+		String pricevalue = s.findElement(By.xpath("following-sibling::td[1]")).getText();
+		return pricevalue;
+	}
+	
+	
+	//filter functionality is working fine or not (search-> result)
+	driver.findElement(By.id("search-field")).sendKeys("Rice");
+
+    List<WebElement> veggies=driver.findElements(By.xpath("//tr/td[1]"));
+
+    //1 results
+
+   List<WebElement> filteredList= veggies.stream().filter(veggie->veggie.getText().contains("Rice")).collect(Collectors.toList());
+
+   //1 result
+   Assert.assertEquals(veggies.size(), filteredList.size());
+	
+}
