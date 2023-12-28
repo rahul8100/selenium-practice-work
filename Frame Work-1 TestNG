@@ -1,0 +1,35 @@
+// setup TestNg for eclipse
+To download -> Eclipse / Help /eclipse workspace / search TestNG(instal) / next(agreement) / restart.
+To check installed or not -> Window / preferences / search TestNG / got means installed.
+
+// Start with New Project in Eclipse
+* New / Project / JAVA PROJECT(next) / Enter name(finish) / skip pop-up.
+* Src / create package / Enter name(finish)
+* In Package / crate class.
+
+TestNg will run without main method - by using Test anoation.(Add testNG libraries & import package [org.testng.annotations.Test;])
+@Test
+	public void demo() {
+		System.out.println("Rahul");
+	}
+note:- we can create multiple test cases in single class.
+
+
+//To create XML file in a project / suite file to run project.
+* right click on project -> TestNG -> convert to testNG(xml file will generate at down) -> from there we can run all test cases.
+
+//we can run multiple classes & separate test case in single class through XML.(Include/Exclude methods) 
+example :- 
+<suite>
+<test name="AirApiReport-TestExecution">                                                [ simply giving one name]
+        <classes>                              
+            <class name="com.odysol.webautomation.affiliates.test.AirApiReportTest">    [ class name]
+                <methods>
+                    <include name="Ody2AirRSLogReport"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
+note :- *  we can use regular expression in names ( <include name="mobile.*"/> the method name which will start from mobile will execute).
+        *  like that we can execute full package. by passing <packages> <package name="test"/> </packages> instead of <classes> 
