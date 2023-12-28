@@ -34,5 +34,12 @@ Short cuts =>
 8) CSS advance locators --> tagname[id$='something']  (ID ends with something)
                             tagname[id^='something']  (ID starts with something )
                             tagname[id='something']>a  ( > notify that a is parent element)
-9) 
+
+9) Advance relative locator of selenium-4.0 [ methods - abobve, below, toLeftOf, toRightOf]
+  syntax/EXPL - 
+         -> WebElement nameEditBox = driver.findElement(By.cssSelector("[name='name']"));
+         -> driver.findElement(with(By.tagName("label")).above(nameEditBox)).getText();
+         -> driver.findElement(with(By.tagName("input")).below(dateofBirth)).click();
+         -> driver.findElement(with(By.tagName("input")).toLeftOf(iceCreamLabel)).click();
+         -> driver.findElement(with(By.tagName("label")).toRightOf(rdb)).getText();
    
