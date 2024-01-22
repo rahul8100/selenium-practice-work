@@ -33,3 +33,41 @@ example :-
 </suite>
 note :- *  we can use regular expression in names ( <include name="mobile.*"/> the method name which will start from mobile will execute).
         *  like that we can execute full package. by passing <packages> <package name="test"/> </packages> instead of <classes> 
+
+TestNG Annotations
+1 - > @BeforeMethod and @AfterMethod
+	@BeforeMethod allows the method to execute before the execution of each @Test methods.
+	@afterMethod is executed after the execution of each @Test methods. 
+
+2 -> @BeforeClass and @AfterClass
+	@BeforeClass will execute only once before the first test method in that particular class is invoked
+	@AfterClass annotation will be executed only once, after all the test methods of that particular class have been invoked.
+
+3 - > @BeforeTest and @AfterTest
+	@BeforeTest methods run after @beforeSuite. For frameworks like smoke testing, @BeforeTest is used for creating an initial data set up and prior to running other test methods.
+	@AfterTest annotation will run after the other tests are complete.
+
+4 - > @BeforeSuite and @AfterSuite
+	@BeforeSuite annotation, we can set up and start the Selenium Webdrivers
+	@AfterSuite annotation is used to stop the Selenium Webdrivers.
+
+Groups Functionality ->
+	In @Test annoation we can pass the parameter like groups="anyname" -> it will helpful when we want to run only few test in whole framework.
+	IN test => @Test(dataProvider = "genericDataProvider", testName = "ODY-18 : B2B Add Open Segment Add Ons+Perform Check Availability", groups = {
+			"ODY-18" })
+	XML =>
+	<suite name="Loan Department">
+		<test name="Regression">
+			<groups>
+				<run>
+					<include name="Smoke"/>
+				</run>
+			</groups>
+		<classes>
+			<class name="test.day1"/>  (All test folders)
+			<class name="test.day2"/>
+			<class name="test.day4"/>
+			<class name="test.day3"/>
+		</classes>
+		</test>
+	</suite>
