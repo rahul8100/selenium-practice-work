@@ -57,6 +57,7 @@ Groups Functionality ->
 			"ODY-18" })
 	XML =>
 	<suite name="Loan Department">
+		<parameter name="URL" value="www.sdvc"/>
 		<test name="Regression">
 			<groups>
 				<run>
@@ -64,10 +65,73 @@ Groups Functionality ->
 				</run>
 			</groups>
 		<classes>
-			<class name="test.day1"/>  (All test folders)
+			<class name="test.day1"/> (All test folders)
+				<methods> 
+					<include name="saveForLater"/>
+				<methods/>
 			<class name="test.day2"/>
 			<class name="test.day4"/>
 			<class name="test.day3"/>
 		</classes>
 		</test>
 	</suite>
+note:- After group Include and exclude in xml.
+
+Dependent Attribute which can pass in test annation =>
+like groups we have multiple attribute while execting.
+
+1) @Test(dependsOnMethods="passTheOtherMethodWhichNeedToExecuteFirst","ifWeWantTwoMethodsToExecuteThenPassThatNameHere")
+	The methods which we passed in parameter will execte 1st
+
+2) @Test(enabled=false)
+	This test case will be escaped if it's fail also. make the pass of whole scenario.
+
+3) @Test(timeout=4000)
+	If the script take more time to execute then we can put in parameter.(It will wait for 4sec)
+
+Parameterising TestNg =>
+	If we want to declare URL or Username in global level in suite xml. like property file
+	IN XML =>><parameter name="URL" value="www.sdvc"/> as mentioned above xml file need to add the key and value in xml file.
+
+	In test Case => in parameter need to add
+	@Test(dataProvider = "genericDataProvider", testName = "ODY-2 : B2B Cruise Only Test With Verification", groups = {
+			"smoke", "ODY-2"})
+	@Parameters({"DPCP-TestData", "cruiseOnly","URL"})
+	public void cruiseOnlyTestWithVerification(Node node, WebDriverActions actions) throws Exception {
+
+
+DATA PROVIDER ANNOATION =>
+	If we want to execute 3 sets of data for different scenarios then instead of declaring every time create one method and store there
+	from there take data what you want for that scenario.
+
+1st need to add data like this in one method then need to call in test case.
+@DataProvider
+public Object[][] getData()
+{
+	//i stands for number of times testcase should run
+	//j stands for no of parametrs it should send for one go
+	Object[][] data=new Object[3][3];
+	data[0][0]="1abcd";
+	data[0][1]="1xyz";
+	data[0][2]="1dsaf";
+	
+	
+	data[1][0]="2abcd";
+	data[1][1]="2xyz";
+	data[1][2]="2dsaf";
+	
+	data[2][0]="3abcd";
+	data[2][1]="3xyz";
+	data[2][2]="3dsaf";
+
+it will execute for there time with different data sets.
+@Test(dataProvider="getData")
+	public void Userid(String username,String password,String id)
+	{
+		System.out.println("This block executes before each Test");
+		System.out.println(username);
+		System.out.println(password);
+		  System.out.println(id);
+		
+		
+	}
